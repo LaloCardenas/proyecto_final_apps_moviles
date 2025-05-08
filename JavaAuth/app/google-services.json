@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "793906867662",
+    "project_id": "javaauth-e2483",
+    "storage_bucket": "javaauth-e2483.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793906867662:android:ab688b87a41b316c4b4f9f",
+        "android_client_info": {
+          "package_name": "com.example.javaauth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsQskYlhBbpr18zUErtBdIp1TNSWKLmW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
