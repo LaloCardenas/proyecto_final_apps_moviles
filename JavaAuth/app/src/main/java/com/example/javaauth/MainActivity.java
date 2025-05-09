@@ -39,39 +39,6 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseAuth auth;
-    GoogleSignInClient googleSignInClient;
-    ShapeableImageView img_profile;
-    TextView txv_name, txv_mail, txv_userid;
-    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if(result.getResultCode() == RESULT_OK){
-                Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                try{
-                    GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
-                    AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
-                    auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                auth = FirebaseAuth.getInstance();
-                                txv_name.setText(auth.getCurrentUser().getDisplayName());
-                                txv_mail.setText(auth.getCurrentUser().getEmail());
-                                txv_userid.setText(auth.getCurrentUser().getUid());
-                                Toast.makeText(MainActivity.this, "Usuario creado correctamente", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(MainActivity.this, "No se pudo iniciar sesión" + task.getException(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                } catch (ApiException e){
-
-                }
-            }
-        }
-    });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,26 +50,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        FirebaseApp.initializeApp(this);
-        img_profile = findViewById(R.id.img_profile);
-        txv_mail = findViewById(R.id.txv_email);
-        txv_name = findViewById(R.id.txv_name);
-        txv_userid = findViewById(R.id.txv_userid);
-
-        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(MainActivity.this, options);
-        auth = FirebaseAuth.getInstance();
-        SignInButton btn_sign = findViewById(R.id.btn_sign);
-        btn_sign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = googleSignInClient.getSignInIntent();
-                activityResultLauncher.launch(intent);
-            }
-        });
+        SignIn signIn = new SignIn(this);
 
     }
 }
