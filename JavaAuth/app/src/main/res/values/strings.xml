@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">JavaAuth</string>
+    <string name="app_name">Cutt3r</string>
     <string name="client_id">793906867662-r1nmaskucusrmgnl115msvi4friij7bm.apps.googleusercontent.com</string>
+    <string name="version_app">V.1.0.0</string>
 </resources>

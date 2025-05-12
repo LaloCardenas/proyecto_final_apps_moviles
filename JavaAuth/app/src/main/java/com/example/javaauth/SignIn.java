@@ -3,6 +3,7 @@ package com.example.javaauth;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +29,8 @@ import com.google.android.material.imageview.ShapeableImageView;
 public class SignIn {
 
     private final Activity activity;
-    private final FirebaseAuth auth;
+    public final FirebaseAuth auth;
     private final GoogleSignInClient googleSignInClient;
-
     private final ShapeableImageView img_profile;
     private final TextView txv_name, txv_mail, txv_userid;
     private final SignInButton btn_sign;
@@ -64,7 +64,6 @@ public class SignIn {
                 this::handleSignInResult
         );
 
-        // Configurar listeners
         setupListeners();
     }
 
@@ -83,20 +82,10 @@ public class SignIn {
                 AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
                 auth.signInWithCredential(credential).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        txv_name.setText(auth.getCurrentUser().getDisplayName());
-                        txv_mail.setText(auth.getCurrentUser().getEmail());
-                        txv_userid.setText(auth.getCurrentUser().getUid());
 
-                        Uri photoUrl = auth.getCurrentUser().getPhotoUrl();
-                        if (photoUrl != null) {
-                            Glide.with(activity)
-                                    .load(photoUrl)
-                                    .into(img_profile);
-                        }
 
-                        Toast.makeText(activity, "Bienvenido de nuevo" + auth.getCurrentUser(), Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(activity, UserDashboard.class);
+                        Intent intent = new Intent(activity, UserDashboard.class );
                         activity.startActivity(intent);
                         activity.finish();
 
@@ -108,5 +97,9 @@ public class SignIn {
                 Toast.makeText(activity, "Error en Sign In: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public FirebaseAuth getAuth() {
+        return this.auth;
     }
 }
