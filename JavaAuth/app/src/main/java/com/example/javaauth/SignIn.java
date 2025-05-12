@@ -31,8 +31,6 @@ public class SignIn {
     private final Activity activity;
     public final FirebaseAuth auth;
     private final GoogleSignInClient googleSignInClient;
-    private final ShapeableImageView img_profile;
-    private final TextView txv_name, txv_mail, txv_userid;
     private final SignInButton btn_sign;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher;
@@ -52,10 +50,6 @@ public class SignIn {
         googleSignInClient = GoogleSignIn.getClient(activity, options);
 
         // Vincular vistas
-        img_profile = activity.findViewById(R.id.img_profile);
-        txv_mail = activity.findViewById(R.id.txv_email);
-        txv_name = activity.findViewById(R.id.txv_name);
-        txv_userid = activity.findViewById(R.id.txv_userid);
         btn_sign = activity.findViewById(R.id.btn_sign);
 
         // Configurar launcher de resultado
