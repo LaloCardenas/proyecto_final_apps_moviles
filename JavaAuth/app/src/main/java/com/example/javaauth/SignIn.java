@@ -2,16 +2,12 @@ package com.example.javaauth;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -21,11 +17,10 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.android.material.imageview.ShapeableImageView;
 
+/** @noinspection ALL*/
 public class SignIn {
 
     private final Activity activity;
@@ -77,8 +72,6 @@ public class SignIn {
                 auth.signInWithCredential(credential).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
 
-
-
                         Intent intent = new Intent(activity, UserDashboard.class );
                         activity.startActivity(intent);
                         activity.finish();
@@ -93,7 +86,4 @@ public class SignIn {
         }
     }
 
-    public FirebaseAuth getAuth() {
-        return this.auth;
-    }
 }
