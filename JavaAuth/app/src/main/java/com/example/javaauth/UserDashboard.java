@@ -69,42 +69,57 @@ public class UserDashboard extends AppCompatActivity {
         });
 
         //Cuando el usuario le de click al botón de "+" evaluar si el campo tiene valores o si esta vacio
-        btn_plus.setOnClickListener(v ->{
-
-            if(txe_url.getText().isEmpty()){
+        btn_plus.setOnClickListener(v -> {
+            if (txe_url.getText().toString().isEmpty()) {
                 Toast.makeText(this, "Error, URL vacía", Toast.LENGTH_LONG).show();
-                //Si el usuario no ha ingresado nada, mostrar un error
             } else {
-                ApiHandler apiHandler = new ApiHandler();
+                ApiHandler apiHandler = new ApiHandler(this);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                assert user != null;
 
-                assert firebaseUser != null;
-                //Mandar en el cuerpo de la solicitud la URL y el id del usuario
                 RequestBodyModel requestBody = new RequestBodyModel(
-                        String.valueOf(txe_url.getText()),
-                        firebaseUser.getUid()
+                        txe_url.getText().toString(),
+                        user.getUid()
                 );
 
                 Call<Object> call = apiHandler.getService().sendData(requestBody);
 
-                try {
-                    retrofit2.Response<Object> response = call.execute();
-                    if (response.isSuccessful()) {
-                        System.out.println("Respuesta: " + response.body());
-                    } else {
-                        System.out.println("Error: " + response.errorBody().string());
+                // Retrofit enqueue asíncrono
+                call.enqueue(new retrofit2.Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        if (response.isSuccessful()) {
+                            runOnUiThread(() -> Toast.makeText(UserDashboard.this, "¡URL enviada con éxito!", Toast.LENGTH_SHORT).show());
+                            System.out.println("Respuesta: " + response.body());
+                        } else {
+                            try {
+                                System.out.println("Error: " + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Hubo un error enviando la URL.", Toast.LENGTH_SHORT).show());
+                        }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        t.printStackTrace();
+                        runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Fallo de conexión.", Toast.LENGTH_SHORT).show());
+                    }
+                });
+            }
         });
 
         assert firebaseUser != null;
         txv_nombre.setText(firebaseUser.getDisplayName());
-        Toast.makeText(this, "¡Hola de nuevo " + firebaseUser.getDisplayName() + "!" , Toast.LENGTH_LONG).show();
+        Toast.makeText(
+                this,
+                "¡Hola de nuevo " + firebaseUser.getDisplayName() + "!" ,
+                Toast.LENGTH_LONG
+        ).show();
 
         Uri photoUrl = firebaseUser.getPhotoUrl();
+
         if (photoUrl != null) {
             Glide.with(this)
                     .load(photoUrl)

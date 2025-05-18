@@ -1,40 +1,42 @@
-package com.example.javaauth;
+    package com.example.javaauth;
 
 
-/*
-* Clase que va a manejar las llamdas a un API de aws por medio de retrofit
-*
-* */
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import android.os.StrictMode;
-import software.amazon.awssdk.regions.Region;
+    /*
+    * Clase que va a manejar las llamdas a un API de aws por medio de retrofit
+    *
+    * */
+    import okhttp3.OkHttpClient;
+    import retrofit2.Retrofit;
+    import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiHandler {
+    import android.content.Context;
+    import android.os.StrictMode;
+    import software.amazon.awssdk.regions.Region;
 
-    private final Retrofit retrofit;
-    private final IApiHandler service;
+    public class ApiHandler {
 
-    public ApiHandler() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        private final Retrofit retrofit;
+        private final IApiHandler service;
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new AwsAuthInterceptor(String.valueOf(R.string.access), String.valueOf(R.string.secret), Region.US_EAST_1, "execute-api"))
-                .build();
+        public ApiHandler(Context context) {
+            String accessKey = context.getString(R.string.access);
+            String secretKey = context.getString(R.string.secret);
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://dw4pk0ul35.execute-api.us-east-1.amazonaws.com/default/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new AwsAuthInterceptor(accessKey, secretKey, Region.US_EAST_1, "execute-api"))
+                    .build();
 
-        service = retrofit.create(IApiHandler.class);
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://dw4pk0ul35.execute-api.us-east-1.amazonaws.com/default/")
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            service = retrofit.create(IApiHandler.class);
+        }
+
+        public IApiHandler getService() {
+            return service;
+        }
     }
-
-    public IApiHandler getService() {
-        return service;
-    }
-}
 

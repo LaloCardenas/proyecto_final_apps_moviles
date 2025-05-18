@@ -7,12 +7,12 @@ public class RequestBodyModel {
     @SerializedName("url")
     private String url;
 
-    @SerializedName("username")
-    private String username;
+    @SerializedName("user_id")
+    private String user_id;
 
-    public RequestBodyModel(String url, String username) {
+    public RequestBodyModel(String url, String user_id) {
         this.url = url;
-        this.username = username;
+        this.user_id = user_id;
     }
 
     public String getUrl() {
@@ -20,6 +20,6 @@ public class RequestBodyModel {
     }
 
     public String getUsername() {
-        return username;
+        return user_id;
     }
 }

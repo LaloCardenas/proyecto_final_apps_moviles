@@ -39,7 +39,8 @@ public class AwsAuthInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
         Aws4Signer signer = Aws4Signer.create();
-        AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(awsCredentials);
+        AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.
+                create(awsCredentials);
 
         SdkHttpFullRequest.Builder requestBuilder = SdkHttpFullRequest.builder()
                 .method(SdkHttpMethod.fromValue(originalRequest.method()))
@@ -52,7 +53,9 @@ public class AwsAuthInterceptor implements Interceptor {
 
         // Leer el contenido real del body
         if (originalRequest.body() != null) {
+
             okio.Buffer buffer = new okio.Buffer();
+
             originalRequest.body().writeTo(buffer);
             final String requestBodyString = buffer.readUtf8();
 
