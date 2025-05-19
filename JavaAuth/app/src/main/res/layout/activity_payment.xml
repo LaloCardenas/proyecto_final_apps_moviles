@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/back"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PaymentActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:text="¿Deseas ser un usuario premium?"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_marginVertical="16dp"/>
+
+    <TextView
+        android:text="Número de tarjeta:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"/>
+
+    <EditText
+        android:id="@+id/txe_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"/>
+
+    <TextView
+        android:text="Fecha de vencimiento:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"/>
+
+    <EditText
+        android:id="@+id/txe_expiration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"/>
+
+    <TextView
+        android:text="CVV:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"/>
+
+
+    <EditText
+        android:id="@+id/txe_cvv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"/>
+
+
+    <Button
+        android:id="@+id/btn_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:text="Pagar" />
+
+
+</LinearLayout>

@@ -1,8 +1,11 @@
 package com.example.javaauth;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +39,7 @@ public class UserDashboard extends AppCompatActivity {
 
     EditText txe_url;
     TextView txv_nombre;
-    Button btn_plus;
+    Button btn_plus, btn_history;
     ImageView img_profile;
 
     @RequiresApi(api = Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -59,55 +62,70 @@ public class UserDashboard extends AppCompatActivity {
 
         img_profile = findViewById(R.id.img_profile);
         btn_plus = findViewById(R.id.btn_plus);
+        btn_history = findViewById(R.id.btn_history);
 
-        //Cuando el usuario le de click a su foto de perfil abrir el menú de settings
         img_profile.setOnClickListener(v -> {
-
-            //llamar a otra vista, de ajustes
-            //Vista de ajustes para comprar premium
-
+            Intent intent = new Intent(this, PaymentActivity.class);
+            startActivity(intent);
         });
+
+        UsageManager usageManager = UsageManager.getInstance(this);
+
+        // Se reinicia para pruebas
+        usageManager.resetUrlCount();
+        usageManager.setPremiumUser(false);
 
         //Cuando el usuario le de click al botón de "+" evaluar si el campo tiene valores o si esta vacio
         btn_plus.setOnClickListener(v -> {
-            if (txe_url.getText().toString().isEmpty()) {
-                Toast.makeText(this, "Error, URL vacía", Toast.LENGTH_LONG).show();
-            } else {
-                ApiHandler apiHandler = new ApiHandler(this);
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                assert user != null;
 
-                RequestBodyModel requestBody = new RequestBodyModel(
-                        txe_url.getText().toString(),
-                        user.getUid()
-                );
+            if (usageManager.incrementUrlCount()) {
+                if (txe_url.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Error, URL vacía", Toast.LENGTH_LONG).show();
+                } else {
+                    ApiHandler apiHandler = new ApiHandler(this);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    assert user != null;
 
-                Call<Object> call = apiHandler.getService().sendData(requestBody);
+                    RequestBodyModel requestBody = new RequestBodyModel(
+                            txe_url.getText().toString(),
+                            user.getUid()
+                    );
 
-                // Retrofit enqueue asíncrono
-                call.enqueue(new retrofit2.Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
-                        if (response.isSuccessful()) {
-                            runOnUiThread(() -> Toast.makeText(UserDashboard.this, "¡URL enviada con éxito!", Toast.LENGTH_SHORT).show());
-                            System.out.println("Respuesta: " + response.body());
-                        } else {
-                            try {
-                                System.out.println("Error: " + response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                    Call<Object> call = apiHandler.getService().sendData(requestBody);
+
+                    // Retrofit enqueue asíncrono
+                    call.enqueue(new retrofit2.Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                            if (response.isSuccessful()) {
+                                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "¡URL enviada con éxito!", Toast.LENGTH_SHORT).show());
+                                System.out.println("Respuesta: " + response.body());
+                            } else {
+                                try {
+                                    System.out.println("Error: " + response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Hubo un error enviando la URL.", Toast.LENGTH_SHORT).show());
                             }
-                            runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Hubo un error enviando la URL.", Toast.LENGTH_SHORT).show());
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        t.printStackTrace();
-                        runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Fallo de conexión.", Toast.LENGTH_SHORT).show());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            t.printStackTrace();
+                            runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Fallo de conexión.", Toast.LENGTH_SHORT).show());
+                        }
+                    });
+                }
+            } else {
+                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "No te quedan usos disponibles", Toast.LENGTH_SHORT).show());
             }
+
+        });
+
+        btn_history.setOnClickListener(v -> {
+            Intent intent = new Intent(this, UrlHistory.class);
+            startActivity(intent);
         });
 
         assert firebaseUser != null;
