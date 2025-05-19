@@ -1,16 +1,15 @@
-package com.example.javaauth;
+package com.example.javaauth.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RequestBodyModel {
+public class CreateUrlRequest {
 
     @SerializedName("url")
     private String url;
 
     @SerializedName("user_id")
     private String user_id;
-
-    public RequestBodyModel(String url, String user_id) {
+    public CreateUrlRequest(String url, String user_id) {
         this.url = url;
         this.user_id = user_id;
     }
@@ -18,8 +17,7 @@ public class RequestBodyModel {
     public String getUrl() {
         return url;
     }
-
-    public String getUsername() {
+    public String getUser_id() {
         return user_id;
     }
 }

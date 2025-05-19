@@ -1,4 +1,4 @@
-    package com.example.javaauth;
+    package com.example.javaauth.Handlers;
 
 
     /*
@@ -10,7 +10,9 @@
     import retrofit2.converter.gson.GsonConverterFactory;
 
     import android.content.Context;
-    import android.os.StrictMode;
+
+    import com.example.javaauth.R;
+
     import software.amazon.awssdk.regions.Region;
 
     public class ApiHandler {
@@ -19,6 +21,7 @@
         private final IApiHandler service;
 
         public ApiHandler(Context context) {
+            //Credenciales
             String accessKey = context.getString(R.string.access);
             String secretKey = context.getString(R.string.secret);
 

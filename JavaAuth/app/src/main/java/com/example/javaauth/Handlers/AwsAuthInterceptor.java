@@ -1,9 +1,11 @@
-package com.example.javaauth;
+package com.example.javaauth.Handlers;
 
 /*
  * Clase para poder acceder al API de AWS
  *
  * */
+
+import androidx.annotation.NonNull;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -14,7 +16,6 @@ import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.auth.signer.Aws4Signer;
 import software.amazon.awssdk.auth.signer.params.Aws4SignerParams;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.http.SdkHttpFullRequest;
 import software.amazon.awssdk.http.SdkHttpMethod;
 import software.amazon.awssdk.regions.Region;
@@ -35,6 +36,7 @@ public class AwsAuthInterceptor implements Interceptor {
         this.serviceName = serviceName;
     }
 
+    @NonNull
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back"
-    tools:context=".UserDashboard">
+    tools:context=".Views.UserDashboard">
 
     <TextView
         android:id="@+id/txv_name"
@@ -84,5 +84,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.325" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_urls"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_url" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

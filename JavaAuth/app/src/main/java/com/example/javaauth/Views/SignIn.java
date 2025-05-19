@@ -1,4 +1,4 @@
-package com.example.javaauth;
+package com.example.javaauth.Views;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.example.javaauth.MainActivity;
+import com.example.javaauth.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
