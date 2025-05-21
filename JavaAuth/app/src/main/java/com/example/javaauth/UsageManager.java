@@ -31,6 +31,10 @@ public class UsageManager {
         editor.apply(); // Guardar el valor
     }
 
+    public boolean getIsPremiumUser(){
+        return this.isPremiumUser;
+    }
+
     public boolean incrementUrlCount() {
         if (isPremiumUser) {
             return true;

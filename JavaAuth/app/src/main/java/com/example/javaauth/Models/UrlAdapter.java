@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javaauth.R;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -41,12 +42,16 @@ public class UrlAdapter extends RecyclerView.Adapter<UrlAdapter.UrlViewHolder> {
         holder.txv_urlOriginal.setText("Url: " + urlModel.getOriginalUrl());
 
         // Mostrar la fecha de vencimiento de la url
+        ZoneId localZone = ZoneId.systemDefault();
         long expiryTimestampMillis = urlModel.getExpire() * 1000L;
         Date expiryDate = new Date(expiryTimestampMillis);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getDefault()); // Or specify a timezone if needed
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm z", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone(localZone));
+
         String formattedExpiryDate = "Vencimiento: " + sdf.format(expiryDate);
         holder.txv_vencimiento.setText(formattedExpiryDate);
+
 
         // URL funcional
         holder.txv_short.setOnClickListener(v -> {

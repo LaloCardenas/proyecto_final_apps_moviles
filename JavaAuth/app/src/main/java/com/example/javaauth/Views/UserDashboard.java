@@ -48,11 +48,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UserDashboard extends AppCompatActivity {
 
     EditText txe_url;
-    TextView txv_nombre;
+    TextView txv_nombre, txv_tipo;
     Button btn_plus;
     ImageView img_profile;
     RecyclerView recyclerUrls;
     public FirebaseUser firebaseUser;
+    UsageManager usageManager;
+    private final String premium = "ERES PREMIUM";
 
 
     @RequiresApi(api = Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -71,6 +73,7 @@ public class UserDashboard extends AppCompatActivity {
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         txv_nombre = findViewById(R.id.txv_name);
+        txv_tipo = findViewById(R.id.txv_tipo);
         txe_url = findViewById(R.id.txe_url);
 
         img_profile = findViewById(R.id.img_profile);
@@ -80,6 +83,8 @@ public class UserDashboard extends AppCompatActivity {
             Intent intent = new Intent(this, PaymentActivity.class);
             startActivity(intent);
         });
+
+        usageManager = UsageManager.getInstance(this);
 
         recyclerUrls = findViewById(R.id.recycler_urls);
         recyclerUrls.setLayoutManager(new LinearLayoutManager(this));
@@ -161,6 +166,13 @@ public class UserDashboard extends AppCompatActivity {
         ).show();
 
         Uri photoUrl = firebaseUser.getPhotoUrl();
+
+        if(usageManager.getIsPremiumUser()){
+            txv_tipo.setText(this.premium);
+        } else {
+            txv_tipo.setText("NO " + this.premium);
+        }
+
 
         if (photoUrl != null) {
             Glide.with(this)
