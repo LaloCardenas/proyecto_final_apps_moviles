@@ -95,8 +95,8 @@ public class UserDashboard extends AppCompatActivity {
         UsageManager usageManager = UsageManager.getInstance(this);
 
         // Se reinicia para pruebas
-        usageManager.resetUrlCount();
-        usageManager.setPremiumUser(false);
+        //usageManager.resetUrlCount();
+        //usageManager.setPremiumUser(false);
 
         /*
         * btn_plus -> botón para generar una nueva URL
