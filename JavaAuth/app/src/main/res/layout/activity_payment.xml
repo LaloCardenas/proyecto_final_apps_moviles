@@ -1,86 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/back"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.PaymentActivity"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:background="@drawable/back"
+    android:paddingStart="24dp"  android:paddingEnd="24dp"    android:paddingTop="24dp"    android:paddingBottom="24dp" tools:context=".Views.PaymentActivity">
 
     <Button
         android:id="@+id/btn_atras"
-        android:layout_width="169dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        android:text="Volver" />
+        android:text="Volver"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="16dp"/>
 
     <TextView
-        android:text="Conviertete en premium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:textStyle="bold"
+        android:id="@+id/textView6"
+        android:layout_width="0dp" android:layout_height="wrap_content"
         android:gravity="center"
+        android:text="Conviértete en premium"
+        android:textColor="#000"
         android:textSize="20sp"
-        android:paddingBottom="20sp"
-        android:layout_marginVertical="16dp"/>
+        android:textStyle="bold"
+        android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/btn_atras"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:text="Número de tarjeta:"
-        android:layout_width="match_parent"
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"/>
+        android:layout_marginTop="32dp"
+        android:text="Número de tarjeta:"
+        android:textColor="#000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <EditText
         android:id="@+id/txe_card"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="16dp"/>
+        android:layout_marginTop="8dp"
+        android:hint="XXXX XXXX XXXX XXXX"
+        android:inputType="number"
+        android:maxLength="19"
+        android:textColor="#000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
 
     <TextView
-        android:text="Fecha de vencimiento:"
-        android:layout_width="match_parent"
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"/>
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:text="Fecha de vencimiento:"
+        android:textColor="#000"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txe_card" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="CVV"
+        android:textColor="#000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.157"
+        app:layout_constraintStart_toEndOf="@+id/guideline_middle"
+        app:layout_constraintTop_toBottomOf="@+id/txe_card" />
 
     <EditText
         android:id="@+id/txe_expiration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="16dp"/>
-
-    <TextView
-        android:text="CVV:"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"/>
-
+        android:layout_width="142dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="mm/AA"
+        android:inputType="number"
+        android:maxLength="5"
+        android:textColor="#000"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
+        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/txe_cvv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="16dp"/>
+        android:layout_width="140dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="XXX"
+        android:inputType="number"
+        android:maxLength="3"
+        android:textColor="#000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintStart_toEndOf="@+id/guideline_middle"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
     <Button
         android:id="@+id/btn_pay"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="16dp"
-        android:text="Pagar" />
+        android:layout_marginTop="48dp"
+        android:text="Pagar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txe_expiration" />
 
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

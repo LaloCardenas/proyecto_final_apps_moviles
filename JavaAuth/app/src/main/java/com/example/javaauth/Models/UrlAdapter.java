@@ -1,12 +1,18 @@
 package com.example.javaauth.Models;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,9 +27,11 @@ import java.util.TimeZone;
 public class UrlAdapter extends RecyclerView.Adapter<UrlAdapter.UrlViewHolder> {
 
     private final List<UrlModel> urls;
+    Context context;
 
-    public UrlAdapter(List<UrlModel> urls) {
+    public UrlAdapter(List<UrlModel> urls, Context context) {
         this.urls = urls;
+        this.context = context;
     }
 
     @NonNull
@@ -59,6 +67,17 @@ public class UrlAdapter extends RecyclerView.Adapter<UrlAdapter.UrlViewHolder> {
             v.getContext().startActivity(browserIntent);
         });
 
+        // permite al usuario copiar la URL
+        holder.imb_copy.setOnClickListener(v -> {
+
+            //crea una nueva clase que permite copiar los elementos
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Short URL", urlModel.getShortUrl());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(context, "URL corta copiada!", Toast.LENGTH_SHORT).show();
+
+        });
+
     }
 
 
@@ -70,12 +89,14 @@ public class UrlAdapter extends RecyclerView.Adapter<UrlAdapter.UrlViewHolder> {
 
     public static class UrlViewHolder extends RecyclerView.ViewHolder {
         public TextView txv_short, txv_vencimiento, txv_urlOriginal;
+        public ImageButton imb_copy;
 
         public UrlViewHolder(@NonNull View itemView) {
             super(itemView);
             txv_short = itemView.findViewById(R.id.txv_short);
             txv_vencimiento = itemView.findViewById(R.id.txv_vencimiento);
             txv_urlOriginal = itemView.findViewById(R.id.txv_urlOriginal);
+            imb_copy = itemView.findViewById(R.id.btn_copy);
         }
     }
 

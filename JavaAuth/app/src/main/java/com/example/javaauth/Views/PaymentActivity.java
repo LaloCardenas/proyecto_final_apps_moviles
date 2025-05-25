@@ -3,10 +3,12 @@ package com.example.javaauth.Views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.text.TextWatcher;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,11 +23,12 @@ import java.util.Calendar; // Importa Calendar
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class PaymentActivity extends AppCompatActivity {
 
     EditText txe_card, txe_expiration, txe_cvv;
     Button btn_pay;
-    Button btn_atras;
+    Button btn_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class PaymentActivity extends AppCompatActivity {
         txe_expiration = findViewById(R.id.txe_expiration);
         txe_cvv = findViewById(R.id.txe_cvv);
         btn_pay = findViewById(R.id.btn_pay);
-        btn_atras = findViewById(R.id.btn_atras);
+        btn_back = findViewById(R.id.btn_atras);
 
         btn_pay.setOnClickListener(v -> {
             Log.i("Tarjeta", txe_card.getText().toString());
@@ -72,7 +75,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
-        btn_atras.setOnClickListener(v -> {
+        btn_back.setOnClickListener(v -> {
             Intent intent = new Intent(PaymentActivity.this, UserDashboard.class);
             startActivity(intent);
             finish();
@@ -83,6 +86,74 @@ public class PaymentActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+        txe_card.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating = false;
+            private final String divider = "-";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) return;
+
+                isUpdating = true;
+                StringBuilder formatted = new StringBuilder(s.toString().replace(divider, ""));
+                int length = formatted.length();
+
+                if (length > 0) {
+                    for (int i = 4; i < length; i += 5) {
+                        formatted.insert(i, divider);
+                        length++;
+                    }
+                }
+
+                txe_card.setText(formatted.toString());
+                txe_card.setSelection(txe_card.getText().length());
+                isUpdating = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Formato automático para fecha de vencimiento (MM/AA)
+        txe_expiration.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) return;
+
+                isUpdating = true;
+
+                String input = s.toString().replace("/", "");
+                if (input.length() > 4) input = input.substring(0, 4); // Limitar a MMYY
+
+                StringBuilder formatted = new StringBuilder();
+
+                for (int i = 0; i < input.length(); i++) {
+                    if (i == 2) formatted.append("/");
+                    formatted.append(input.charAt(i));
+                }
+
+                txe_expiration.setText(formatted.toString());
+                txe_expiration.setSelection(formatted.length());
+                isUpdating = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+
+
+
     }
 
     public static boolean checkCard(String input) {
@@ -131,4 +202,5 @@ public class PaymentActivity extends AppCompatActivity {
     public static boolean checkCVV(String input) {
         return input.matches("\\d{3}");
     }
+
 }

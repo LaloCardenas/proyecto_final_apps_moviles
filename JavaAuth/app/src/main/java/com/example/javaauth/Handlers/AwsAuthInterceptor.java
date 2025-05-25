@@ -39,11 +39,14 @@ public class AwsAuthInterceptor implements Interceptor {
     @NonNull
     @Override
     public Response intercept(Chain chain) throws IOException {
+        //para realizar llamadas de http
         Request originalRequest = chain.request();
+        //Para mandar credenciales de AWS
         Aws4Signer signer = Aws4Signer.create();
         AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.
                 create(awsCredentials);
 
+        //Consumir el url
         SdkHttpFullRequest.Builder requestBuilder = SdkHttpFullRequest.builder()
                 .method(SdkHttpMethod.fromValue(originalRequest.method()))
                 .uri(URI.create(originalRequest.url().toString()));
@@ -80,7 +83,7 @@ public class AwsAuthInterceptor implements Interceptor {
         SdkHttpFullRequest signedRequest = signer.
                 sign(requestBuilder.build(), signerParams);
 
-        // Pasar los headers firmados a la request de OkHttp
+        // Pasar los headers con las credenciales awss a la request de OkHttp
         Request.Builder newRequestBuilder = originalRequest.newBuilder();
 
         signedRequest.headers().forEach((key, values) -> {

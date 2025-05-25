@@ -1,9 +1,11 @@
 package com.example.javaauth.Views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,12 +50,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UserDashboard extends AppCompatActivity {
 
     EditText txe_url;
-    TextView txv_nombre, txv_tipo;
+    TextView txv_nombre, txv_tipo, txv_usos;
     Button btn_plus;
     ImageView img_profile;
     RecyclerView recyclerUrls;
     public FirebaseUser firebaseUser;
     UsageManager usageManager;
+    Context context;
     private final String premium = "ERES PREMIUM";
 
 
@@ -69,20 +72,20 @@ public class UserDashboard extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        this.context = this;
+
         //retrive al usuario
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         txv_nombre = findViewById(R.id.txv_name);
         txv_tipo = findViewById(R.id.txv_tipo);
+        txv_usos = findViewById(R.id.txv_usos);
+
         txe_url = findViewById(R.id.txe_url);
 
         img_profile = findViewById(R.id.img_profile);
-        btn_plus = findViewById(R.id.btn_plus);
 
-        img_profile.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PaymentActivity.class);
-            startActivity(intent);
-        });
+        btn_plus = findViewById(R.id.btn_plus);
 
         usageManager = UsageManager.getInstance(this);
 
@@ -90,13 +93,13 @@ public class UserDashboard extends AppCompatActivity {
         recyclerUrls.setLayoutManager(new LinearLayoutManager(this));
 
         this.loadUrls();
-
-
         UsageManager usageManager = UsageManager.getInstance(this);
 
-        // Se reinicia para pruebas
-        usageManager.resetUrlCount();
-        usageManager.setPremiumUser(false);
+        //Pantalla para hacerte premium
+        img_profile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PaymentActivity.class);
+            startActivity(intent);
+        });
 
         /*
         * btn_plus -> botón para generar una nueva URL
@@ -131,15 +134,9 @@ public class UserDashboard extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                             if (response.isSuccessful()) {
-                                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "¡URL enviada con éxito!", Toast.LENGTH_SHORT).show());
-                                System.out.println("Respuesta: " + response.body());
+                                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Nueva generada con éxito", Toast.LENGTH_SHORT).show());
                                 loadUrls();
                             } else {
-                                try {
-                                    System.out.println("Error: " + response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                                 runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Hubo un error enviando la URL.", Toast.LENGTH_SHORT).show());
                             }
                         }
@@ -154,7 +151,7 @@ public class UserDashboard extends AppCompatActivity {
             } else {
                 runOnUiThread(() -> Toast.makeText(UserDashboard.this, "No te quedan usos disponibles", Toast.LENGTH_SHORT).show());
             }
-
+            urlRestante();
         });
 
         assert firebaseUser != null;
@@ -169,8 +166,12 @@ public class UserDashboard extends AppCompatActivity {
 
         if(usageManager.getIsPremiumUser()){
             txv_tipo.setText(this.premium);
+            txv_usos.setVisibility(View.INVISIBLE);
         } else {
             txv_tipo.setText("NO " + this.premium);
+            txv_usos.setText(
+                    String.valueOf("Usos restantes: " + usageManager.getRemainingUses())
+            );
         }
 
 
@@ -183,8 +184,6 @@ public class UserDashboard extends AppCompatActivity {
 
     private void loadUrls() {
         ApiHandler apiHandler = new ApiHandler(this);
-
-        String userId = "XKDuY1IC61O8kIiWgz7t3Sjrhho1";
         GetUrlsRequest body = new GetUrlsRequest(firebaseUser.getUid());
 
         Call<List<UrlModel>> call = apiHandler.getService().getUrls(body);
@@ -194,7 +193,7 @@ public class UserDashboard extends AppCompatActivity {
             public void onResponse(Call<List<UrlModel>> call, Response<List<UrlModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<UrlModel> urls = response.body();
-                    UrlAdapter adapter = new UrlAdapter(urls);
+                    UrlAdapter adapter = new UrlAdapter(urls, context);
                     recyclerUrls.setAdapter(adapter);
                 } else {
                     Toast.makeText(UserDashboard.this, "Error cargando URLs", Toast.LENGTH_SHORT).show();
@@ -208,6 +207,14 @@ public class UserDashboard extends AppCompatActivity {
         });
     }
 
-
+    private void urlRestante(){
+        if(usageManager.getIsPremiumUser()){
+            txv_usos.setVisibility(View.INVISIBLE);
+        } else {
+            txv_usos.setText(
+                    String.valueOf("Usos restantes: " + usageManager.getRemainingUses())
+            );
+        }
+    }
 
 }

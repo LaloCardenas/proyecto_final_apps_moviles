@@ -2,6 +2,13 @@ package com.example.javaauth.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+/*
+* Clase createURL
+*
+* crea el cuerpo de JSON para el request de crear un nuevo URL
+* manda un url <- texto ingresado por el usuario
+* manda el uuid <- se obtiene del firebase
+* */
 public class CreateUrlRequest {
 
     @SerializedName("url")
