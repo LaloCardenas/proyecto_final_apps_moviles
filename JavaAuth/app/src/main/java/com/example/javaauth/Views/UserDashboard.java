@@ -29,8 +29,6 @@ import com.example.javaauth.Models.UrlAdapter;
 import com.example.javaauth.UsageManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
