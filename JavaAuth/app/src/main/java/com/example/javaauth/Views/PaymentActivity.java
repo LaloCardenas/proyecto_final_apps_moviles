@@ -16,8 +16,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.javaauth.MainActivity;
 import com.example.javaauth.R;
 import com.example.javaauth.UsageManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar; // Importa Calendar
 import java.util.regex.Matcher;
@@ -27,7 +32,7 @@ import java.util.regex.Pattern;
 public class PaymentActivity extends AppCompatActivity {
 
     EditText txe_card, txe_expiration, txe_cvv;
-    Button btn_pay;
+    Button btn_pay, btn_logout;
     Button btn_back;
 
     @Override
@@ -43,50 +48,7 @@ public class PaymentActivity extends AppCompatActivity {
         txe_cvv = findViewById(R.id.txe_cvv);
         btn_pay = findViewById(R.id.btn_pay);
         btn_back = findViewById(R.id.btn_atras);
-
-        btn_pay.setOnClickListener(v -> {
-            Log.i("Tarjeta", txe_card.getText().toString());
-            Log.i("Expiracion", txe_expiration.getText().toString());
-            Log.i("CVV", txe_cvv.getText().toString());
-
-            if (txe_card.getText().toString().isEmpty()
-                    || txe_expiration.getText().toString().isEmpty()
-                    || txe_cvv.getText().toString().isEmpty()) {
-                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_LONG).show();
-            } else if (!checkCard(txe_card.getText().toString())) {
-                Toast.makeText(this, "Ingresa un número de tarjeta válido", Toast.LENGTH_LONG).show();
-            } else if (!checkExpiration(txe_expiration.getText().toString())) {
-                Toast.makeText(this, "Ingresa una fecha de vencimiento válida y futura (MM/AA)", Toast.LENGTH_LONG).show();
-            } else if (!checkCVV(txe_cvv.getText().toString())) {
-                Toast.makeText(this, "Ingresa un CVV válido", Toast.LENGTH_LONG).show();
-            } else {
-                usageManager.setPremiumUser(true);
-                Toast.makeText(this, "Ahora eres premium", Toast.LENGTH_LONG).show();
-
-                //Congela un segundo la pantalla para que el usuario vea
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(PaymentActivity.this, UserDashboard.class);
-                        startActivity(intent);
-                        finish(); // Cierra PaymentActivity
-                    }
-                }, 900); // 1 segundo
-            }
-        });
-
-        btn_back.setOnClickListener(v -> {
-            Intent intent = new Intent(PaymentActivity.this, UserDashboard.class);
-            startActivity(intent);
-            finish();
-        });
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
+        btn_logout = findViewById(R.id.btn_logout);
 
         txe_card.addTextChangedListener(new TextWatcher() {
             private boolean isUpdating = false;
@@ -151,8 +113,63 @@ public class PaymentActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
+        btn_pay.setOnClickListener(v -> {
+            Log.i("Tarjeta", txe_card.getText().toString());
+            Log.i("Expiracion", txe_expiration.getText().toString());
+            Log.i("CVV", txe_cvv.getText().toString());
+
+            if (txe_card.getText().toString().isEmpty()
+                    || txe_expiration.getText().toString().isEmpty()
+                    || txe_cvv.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_LONG).show();
+            } else if (!checkCard(txe_card.getText().toString())) {
+                Toast.makeText(this, "Ingresa un número de tarjeta válido", Toast.LENGTH_LONG).show();
+            } else if (!checkExpiration(txe_expiration.getText().toString())) {
+                Toast.makeText(this, "Ingresa una fecha de vencimiento válida y futura (MM/AA)", Toast.LENGTH_LONG).show();
+            } else if (!checkCVV(txe_cvv.getText().toString())) {
+                Toast.makeText(this, "Ingresa un CVV válido", Toast.LENGTH_LONG).show();
+            } else {
+                usageManager.setPremiumUser(true);
+                Toast.makeText(this, "Ahora eres premium", Toast.LENGTH_LONG).show();
+
+                //Congela un segundo la pantalla para que el usuario vea
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(PaymentActivity.this, UserDashboard.class);
+                        startActivity(intent);
+                        finish(); // Cierra PaymentActivity
+                    }
+                }, 900); // 1 segundo
+            }
+        });
+
+        btn_back.setOnClickListener(v -> {
+            Intent intent = new Intent(PaymentActivity.this, UserDashboard.class);
+            startActivity(intent);
+            finish();
+        });
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN);
+
+        btn_logout.setOnClickListener(v -> {
+            mAuth.signOut();
+            mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                Toast.makeText(this, "Cerrando sesión...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            });
+        });
 
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
     }
 

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-/*
+/** @noinspection CallToPrintStackTrace*/ /*
 * Clase que es llamada una vez el usuario inicia sesión
 * llama a la pantalla principal de la aplicación Usuario Dashboard
 *   - Crear nuevas URL´s
@@ -56,7 +57,7 @@ public class UserDashboard extends AppCompatActivity {
     UsageManager usageManager;
     Context context;
     private final String premium = "ERES PREMIUM";
-
+    public boolean first = true;
 
     @RequiresApi(api = Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @Override
@@ -130,9 +131,9 @@ public class UserDashboard extends AppCompatActivity {
                     // Retrofit enqueue asíncrono
                     call.enqueue(new retrofit2.Callback<Object>() {
                         @Override
-                        public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        public void onResponse(@NonNull Call<Object> call, @NonNull retrofit2.Response<Object> response) {
                             if (response.isSuccessful()) {
-                                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Nueva generada con éxito", Toast.LENGTH_SHORT).show());
+                                runOnUiThread(() -> Toast.makeText(UserDashboard.this, "URL acortada con éxito", Toast.LENGTH_SHORT).show());
                                 loadUrls();
                             } else {
                                 runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Hubo un error enviando la URL.", Toast.LENGTH_SHORT).show());
@@ -140,7 +141,7 @@ public class UserDashboard extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
+                        public void onFailure(@NonNull Call<Object> call, Throwable t) {
                             t.printStackTrace();
                             runOnUiThread(() -> Toast.makeText(UserDashboard.this, "Fallo de conexión.", Toast.LENGTH_SHORT).show());
                         }
@@ -154,11 +155,15 @@ public class UserDashboard extends AppCompatActivity {
 
         assert firebaseUser != null;
         txv_nombre.setText(firebaseUser.getDisplayName());
-        Toast.makeText(
-                this,
-                "¡Hola de nuevo " + firebaseUser.getDisplayName() + "!" ,
-                Toast.LENGTH_LONG
-        ).show();
+        if (first) {
+            Toast.makeText(
+                    this,
+                    "¡Hola de nuevo " + firebaseUser.getDisplayName() + "!" ,
+                    Toast.LENGTH_LONG
+            ).show();
+            this.first = false;
+        }
+
 
         Uri photoUrl = firebaseUser.getPhotoUrl();
 
@@ -192,6 +197,7 @@ public class UserDashboard extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<UrlModel> urls = response.body();
                     UrlAdapter adapter = new UrlAdapter(urls, context);
+                    txe_url.setText("");
                     recyclerUrls.setAdapter(adapter);
                 } else {
                     Toast.makeText(UserDashboard.this, "Error cargando URLs", Toast.LENGTH_SHORT).show();
@@ -214,5 +220,10 @@ public class UserDashboard extends AppCompatActivity {
             );
         }
     }
+
+    public FirebaseUser getUser(){
+        return this.firebaseUser;
+    }
+
 
 }
