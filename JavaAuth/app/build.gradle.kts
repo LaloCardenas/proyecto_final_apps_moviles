@@ -34,9 +34,21 @@ android {
 
 dependencies {
 
+    //Glide y firebase
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.android.gms:play-services-auth:21.3.0")
 
+    //Retrofit
+    implementation ("com.google.code.gson:gson:2.9.1")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //OkHttp para acceder al API
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+
+    //librerias de aws
+    implementation ("software.amazon.awssdk:auth:2.25.26")
+    implementation ("software.amazon.awssdk:regions:2.25.26")
 
     implementation(libs.appcompat)
     implementation(libs.material)
